@@ -1,0 +1,93 @@
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card"; // Mengimpor komponen kartu untuk tampilan produk
+import { Button } from "@/components/ui/button"; // Mengimpor tombol UI
+import { ShoppingCart } from "lucide-react"; // Mengimpor ikon keranjang dari lucide-react
+
+// Daftar produk yang akan ditampilkan di halaman
+const products = [
+  {
+    id: 1,
+    name: "PRINT",
+    price: 500,
+    category: "Layanan Digital",
+    image: "https://via.placeholder.com/200x200?text=Print"
+  },
+  {
+    id: 2,
+    name: "FOTOKOPI",
+    price: 400,
+    category: "Layanan Digital",
+    image: "https://via.placeholder.com/200x200?text=Fotokopi"
+  },
+  {
+    id: 3,
+    name: "JILID",
+    price: 4000,
+    category: "Finishing",
+    image: "https://via.placeholder.com/200x200?text=Jilid"
+  },
+  {
+    id: 4,
+    name: "JILID SKRIPSI",
+    price: 40000,
+    category: "Finishing",
+    image: "https://via.placeholder.com/200x200?text=Jilid"
+  }
+];
+
+// Komponen utama halaman web belanja
+export default function WebBelanja() {
+  const [selectedCategory, setSelectedCategory] = useState("Semua"); // State untuk kategori terpilih
+
+  // Daftar kategori unik
+  const categories = ["Semua", ...new Set(products.map((p) => p.category))];
+
+  // Filter produk berdasarkan kategori yang dipilih
+  const filteredProducts =
+    selectedCategory === "Semua"
+      ? products
+      : products.filter((p) => p.category === selectedCategory);
+
+  return (
+    <div className="p-4">
+      {/* Dropdown kategori */}
+      <div className="mb-6">
+        <label className="block mb-2 font-medium">Kategori:</label>
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          className="border rounded p-2"
+        >
+          {categories.map((category, index) => (
+            <option key={index} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Grid responsif untuk menampilkan daftar produk */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {filteredProducts.map((product) => (
+          <Card key={product.id} className="rounded-2xl shadow-md">
+            {/* Gambar produk */}
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-full h-48 object-cover rounded-t-2xl"
+            />
+            <CardContent className="p-4">
+              <h2 className="text-xl font-semibold mb-1">{product.name}</h2>
+              <p className="text-sm text-gray-500 mb-1">Kategori: {product.category}</p>
+              <p className="text-gray-700 mb-4">Rp {product.price.toLocaleString()}</p>
+              <Button className="w-full flex items-center justify-center gap-2">
+                <ShoppingCart size={18} />
+                Tambah ke Keranjang
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
